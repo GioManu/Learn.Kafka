@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34330.188
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Learn.Kafka.TaxWebAPI", "Learn.Kafka.TaxWebAPI\Learn.Kafka.TaxWebAPI.csproj", "{858839AF-8BC7-4E62-95CB-A5A60291AB17}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{858839AF-8BC7-4E62-95CB-A5A60291AB17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{858839AF-8BC7-4E62-95CB-A5A60291AB17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{858839AF-8BC7-4E62-95CB-A5A60291AB17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{858839AF-8BC7-4E62-95CB-A5A60291AB17}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {53EF1EEC-6574-486B-B2CC-647E65B49276}
+	EndGlobalSection
+EndGlobal

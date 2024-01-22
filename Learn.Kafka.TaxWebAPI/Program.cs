@@ -1,15 +1,23 @@
+using FluentValidation;
+using Learn.Kafka.Taxi.Shared;
+using Learn.Kafka.Taxi.Shared.Interfaces;
+using Learn.Kafka.Taxi.Shared.Models;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+using System;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+builder.Services.AddSingleton<IVehicleProducer, VehicleCoordsProducerService>();
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<IValidator<VehicleSignalRequest>, VehicleSignalRequestValidator>();
+builder.Services.AddFluentValidationAutoValidation();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

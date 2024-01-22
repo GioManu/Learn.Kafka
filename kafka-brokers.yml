@@ -1,0 +1,83 @@
+version: '3'
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      
+  kafka1:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka1
+    ports:
+      - "8097:8097"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: EXTERNAL:PLAINTEXT,INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: EXTERNAL://localhost:8097,INTERNAL://kafka1:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+  kafka2:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka2
+    ports:
+      - "8098:8098"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: EXTERNAL:PLAINTEXT,INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: EXTERNAL://localhost:8098,INTERNAL://kafka2:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+  kafka3:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka3
+    ports:
+      - "8099:8099"
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: EXTERNAL:PLAINTEXT,INTERNAL:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: EXTERNAL://localhost:8099,INTERNAL://kafka3:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 2
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    ports:
+        - "8080:8080"
+    depends_on:
+        - kafka1
+        - kafka2
+        - kafka3
+        - zookeeper
+    environment:
+        KAFKA_CLUSTERS_0_NAME: local
+        KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka1:9092,kafka2:9092,kafka3:9092
+        KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+        KAFKA_CLUSTERS_0_METRICS_PORT: 9997
+        DYNAMIC_CONFIG_ENABLED: 'true'
+  init-kafka:
+    image: confluentinc/cp-kafka:6.1.1
+    depends_on:
+      - kafka1
+    entrypoint: [ '/bin/sh', '-c' ]
+    command: |
+      "
+      # blocks until kafka is reachable
+      kafka-topics --bootstrap-server kafka:29092 --list
+
+      echo -e 'Creating kafka topics'
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic input_vehicle_coords_topic --replication-factor 2 --partitions 3
+      kafka-topics --bootstrap-server kafka1:9092 --create --if-not-exists --topic output_vehicle_coords_topic --replication-factor 2 --partitions 3
+
+      echo -e 'Successfully created the following topics:'
+      kafka-topics --bootstrap-server kafka1:9092 --list
+          "

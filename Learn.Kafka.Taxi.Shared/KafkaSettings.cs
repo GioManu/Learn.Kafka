@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Learn.Kafka.Taxi.Shared
 {
-    public static class KafkaSettings
+    public class KafkaSettings
     {
         public const string BootstrapServers = "localhost:8097,localhost:8098,localhost:8099";
         public const string CalcConsumerGroupId = "calc-consumer-group";
